@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RestaurantWebMvc.Context;
+using RestaurantWebMvc.Models;
+using RestaurantWebMvc.Repositories;
+using RestaurantWebMvc.Repositories.Interfaces;
 
 namespace RestaurantWebMvc
 {
@@ -19,7 +22,18 @@ namespace RestaurantWebMvc
             services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(connectionString));
 
+            services.AddTransient<ILancheRepository, LancheRepository>();
+            services.AddTransient<ICategoriaRepository, CategoriaRepository>();
+            //Instacia p vida da aplicacao
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //A cada request
+            services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
+
             services.AddControllersWithViews();
+
+            services.AddMemoryCache();
+            services.AddSession();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +53,7 @@ namespace RestaurantWebMvc
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
             app.UseAuthorization();
 
