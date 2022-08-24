@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using RestaurantWebMvc.Context;
 using RestaurantWebMvc.Models;
 using RestaurantWebMvc.Repositories;
@@ -22,8 +23,14 @@ namespace RestaurantWebMvc
             services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(connectionString));
 
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+
             services.AddTransient<ILancheRepository, LancheRepository>();
             services.AddTransient<ICategoriaRepository, CategoriaRepository>();
+            services.AddTransient<IPedidoRepository, PedidoRepository>();
+
             //Instacia p vida da aplicacao
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //A cada request
@@ -53,8 +60,10 @@ namespace RestaurantWebMvc
             app.UseStaticFiles();
 
             app.UseRouting();
+
             app.UseSession();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

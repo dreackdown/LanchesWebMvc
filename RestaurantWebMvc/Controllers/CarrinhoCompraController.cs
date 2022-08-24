@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RestaurantWebMvc.Models;
 using RestaurantWebMvc.Repositories.Interfaces;
 using RestaurantWebMvc.ViewModels;
@@ -30,6 +31,7 @@ namespace RestaurantWebMvc.Controllers
             return View(carrinhoCompraVM);
         }
 
+        [Authorize]
         public IActionResult AdicionarItemNoCarrinhoCompra(int lancheId)
         {
             var lancheSelecionado = _lancheRepository.Lanches
@@ -42,6 +44,7 @@ namespace RestaurantWebMvc.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         public IActionResult RemoverItemDoCarrinhoCompra(int lancheId)
         {
             var lancheSelecionado = _lancheRepository.Lanches
