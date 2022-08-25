@@ -4,6 +4,7 @@ using RestaurantWebMvc.Context;
 using RestaurantWebMvc.Models;
 using RestaurantWebMvc.Repositories;
 using RestaurantWebMvc.Repositories.Interfaces;
+using RestaurantWebMvc.Services;
 
 namespace RestaurantWebMvc
 {
@@ -30,6 +31,16 @@ namespace RestaurantWebMvc
             services.AddTransient<ILancheRepository, LancheRepository>();
             services.AddTransient<ICategoriaRepository, CategoriaRepository>();
             services.AddTransient<IPedidoRepository, PedidoRepository>();
+            services.AddScoped<ISeedUserRoleInitial, SeedUserRoleInitial>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin",
+                politica =>
+                {
+                    politica.RequireRole("Admin");
+                });
+            });
 
             //Instacia p vida da aplicacao
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -44,7 +55,7 @@ namespace RestaurantWebMvc
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ISeedUserRoleInitial seedUserRoleInitial)
         {
             if (env.IsDevelopment())
             {
@@ -57,9 +68,12 @@ namespace RestaurantWebMvc
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
 
+            app.UseStaticFiles();
             app.UseRouting();
+
+            seedUserRoleInitial.SeedRoles();
+            seedUserRoleInitial.SeedUsers();
 
             app.UseSession();
 
@@ -68,6 +82,11 @@ namespace RestaurantWebMvc
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                  name: "areas",
+                  pattern: "{area:exists}/{controller=Admin}/{action=Index}/{id?}"
+                );
+
                 endpoints.MapControllerRoute(
                     name: "categoriaFiltro",
                     pattern: "Lanche/{action}/{categoria?}",
