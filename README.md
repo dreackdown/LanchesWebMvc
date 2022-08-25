@@ -10,3 +10,4 @@ Foi desenvolvida um site para vendas de lanches funcional
 - View Model Pattern
 - Injeção de Dependência
 - Session
+- Autenticação e Autorização com Identity 
