@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ReflectionIT.Mvc.Paging;
 using RestaurantWebMvc.Context;
 using RestaurantWebMvc.Models;
 using System.Data;
@@ -18,10 +19,25 @@ namespace RestaurantWebMvc.Areas.Admin.Controllers
             _context = context;
         }
 
-        // GET: Admin/AdminPedidos
-        public async Task<IActionResult> Index()
+        //// GET: Admin/AdminPedidos
+        //public async Task<IActionResult> Index()
+        //{
+        //      return View(await _context.Pedidos.ToListAsync());
+        //}
+
+        public async Task<IActionResult> Index(string filter, int pageindex = 1, string sort = "Nome")
         {
-              return View(await _context.Pedidos.ToListAsync());
+            var resultado = _context.Pedidos.AsTracking()
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                resultado = resultado.Where(p => p.Nome.Contains(filter));
+            }
+
+            var model = await PagingList.CreateAsync(resultado, 5, pageindex, sort, "Nome");
+            model.RouteValue = new RouteValueDictionary { { "filter", filter } };
+            return View(model);
         }
 
         // GET: Admin/AdminPedidos/Details/5
@@ -147,14 +163,14 @@ namespace RestaurantWebMvc.Areas.Admin.Controllers
             {
                 _context.Pedidos.Remove(pedido);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PedidoExists(int id)
         {
-          return _context.Pedidos.Any(e => e.PedidoId == id);
+            return _context.Pedidos.Any(e => e.PedidoId == id);
         }
     }
 }

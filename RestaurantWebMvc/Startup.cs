@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ReflectionIT.Mvc.Paging;
 using RestaurantWebMvc.Context;
 using RestaurantWebMvc.Models;
 using RestaurantWebMvc.Repositories;
@@ -48,6 +49,12 @@ namespace RestaurantWebMvc
             services.AddScoped(sp => CarrinhoCompra.GetCarrinho(sp));
 
             services.AddControllersWithViews();
+
+            services.AddPaging(options =>
+            {
+                options.ViewName = "Bootstrap4";
+                options.PageParameterName = "pageIndex";
+            });
 
             services.AddMemoryCache();
             services.AddSession();
