@@ -11,4 +11,4 @@ Foi desenvolvida um site para vendas de lanches funcional
 - Injeção de Dependência
 - Session
 - Autenticação e Autorização com Identity 
-- Paginação ReflectionIT.Mvc.Paging
+- Paginação com ReflectionIT.Mvc.Paging
