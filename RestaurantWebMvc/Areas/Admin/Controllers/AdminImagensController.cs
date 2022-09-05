@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using RestaurantWebMvc.Models;
 
-namespace LanchesMac.Areas.Admin.Controllers
+namespace RestaurantWebMvc.Areas.Admin.Controllers
 {
 
     [Area("Admin")]

@@ -2,7 +2,7 @@
 using RestaurantWebMvc.Context;
 using RestaurantWebMvc.Models;
 
-namespace RestaurantWebMvc.Areas.Admin.Services
+namespace RestaurantWebMvc.Areas.Admin.Services 
 {
     public class RelatorioVendasService
     {
