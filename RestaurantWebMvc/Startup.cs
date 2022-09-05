@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ReflectionIT.Mvc.Paging;
+using RestaurantWebMvc.Areas.Admin.Services;
 using RestaurantWebMvc.Context;
 using RestaurantWebMvc.Models;
 using RestaurantWebMvc.Repositories;
@@ -29,10 +30,13 @@ namespace RestaurantWebMvc
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.Configure<ConfigurationImagens>(Configuration.GetSection("ConfigurationPastaImagens"));
+
             services.AddTransient<ILancheRepository, LancheRepository>();
             services.AddTransient<ICategoriaRepository, CategoriaRepository>();
             services.AddTransient<IPedidoRepository, PedidoRepository>();
             services.AddScoped<ISeedUserRoleInitial, SeedUserRoleInitial>();
+            services.AddScoped<RelatorioVendasService>();
 
             services.AddAuthorization(options =>
             {

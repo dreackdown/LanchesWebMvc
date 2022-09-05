@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ReflectionIT.Mvc.Paging;
 using RestaurantWebMvc.Context;
 using RestaurantWebMvc.Models;
+using RestaurantWebMvc.ViewModels;
 using System.Data;
 
 namespace RestaurantWebMvc.Areas.Admin.Controllers
@@ -17,6 +18,27 @@ namespace RestaurantWebMvc.Areas.Admin.Controllers
         public AdminPedidosController(AppDbContext context)
         {
             _context = context;
+        }
+
+        public IActionResult PedidoLanches(int? id)
+        {
+            var pedido = _context.Pedidos
+                .Include(pd => pd.PedidoItens)
+                .ThenInclude(l => l.Lanche)
+                .FirstOrDefault(p => p.PedidoId == id);
+
+            if (pedido == null)
+            {
+                Response.StatusCode = 404;
+                return View("PedidoNotFound", id.Value);
+            }
+
+            PedidoLancheViewModel pedidoLanches = new PedidoLancheViewModel()
+            {
+                Pedido = pedido,
+                PedidoDetalhes = pedido.PedidoItens
+            };
+            return View(pedidoLanches);
         }
 
         //// GET: Admin/AdminPedidos
@@ -40,7 +62,6 @@ namespace RestaurantWebMvc.Areas.Admin.Controllers
             return View(model);
         }
 
-        // GET: Admin/AdminPedidos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Pedidos == null)
@@ -58,15 +79,11 @@ namespace RestaurantWebMvc.Areas.Admin.Controllers
             return View(pedido);
         }
 
-        // GET: Admin/AdminPedidos/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/AdminPedidos/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PedidoId,Nome,Sobrenome,Endereco1,Endereco2,Cep,Estado,Cidade,Telefone,Email,PedidoEnviado,PedidoEntregueEm")] Pedido pedido)
@@ -80,7 +97,6 @@ namespace RestaurantWebMvc.Areas.Admin.Controllers
             return View(pedido);
         }
 
-        // GET: Admin/AdminPedidos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Pedidos == null)
@@ -96,9 +112,6 @@ namespace RestaurantWebMvc.Areas.Admin.Controllers
             return View(pedido);
         }
 
-        // POST: Admin/AdminPedidos/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("PedidoId,Nome,Sobrenome,Endereco1,Endereco2,Cep,Estado,Cidade,Telefone,Email,PedidoEnviado,PedidoEntregueEm")] Pedido pedido)
@@ -131,7 +144,6 @@ namespace RestaurantWebMvc.Areas.Admin.Controllers
             return View(pedido);
         }
 
-        // GET: Admin/AdminPedidos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Pedidos == null)
@@ -149,7 +161,6 @@ namespace RestaurantWebMvc.Areas.Admin.Controllers
             return View(pedido);
         }
 
-        // POST: Admin/AdminPedidos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
