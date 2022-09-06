@@ -1,6 +1,6 @@
 # LanchesWebMvc
 
-Foi desenvolvida um site para vendas de lanches funcional
+Foi desenvolvida um site para vendas de lanches funcional no padrão MVC
 
 ## Tecnologias e práticas utilizadas
 - ASP.NET Core com .NET 6
@@ -9,8 +9,10 @@ Foi desenvolvida um site para vendas de lanches funcional
 - Repository Pattern
 - View Model Pattern
 - Injeção de Dependência
-- Session
+- Carrinho de compras com Session
 - Autenticação e Autorização com Identity 
 - Paginação com ReflectionIT.Mvc.Paging
+- Code-Frist
+- Consultas LINQ
 - Visualização de gráficos com Google Charts
-- Gerenciamento de Arquivos
+- Upload de arquivos para o servidor
