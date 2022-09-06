@@ -1,4 +1,4 @@
-# RestaurantWebMvc
+# LanchesWebMvc
 
 Foi desenvolvida um site para vendas de lanches funcional
 
